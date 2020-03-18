@@ -1,4 +1,4 @@
-package br.com.zup.order.orchestrator.configuration;
+ package br.com.zup.order.orchestrator.configuration;
 
 
 import java.util.HashMap;

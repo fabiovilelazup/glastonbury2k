@@ -7,9 +7,9 @@
         <groupId>br.com.zup</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <artifactId>inventory</artifactId>
+    <artifactId>inventory2k</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>inventory</name>
+    <name>inventory2k</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>

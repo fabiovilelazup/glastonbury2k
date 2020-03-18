@@ -16,9 +16,10 @@
     <description>Demo project for Spring Boot</description>
 
     <modules>
-        <module>order</module>
-        <module>inventory</module>
-        <module>payment</module>
+        <module>sharedk2</module>
+        <module>order2k</module>
+        <module>inventory2k</module>
+        <module>payment2k</module>
         <module>order-orchestrator</module>
     </modules>
 

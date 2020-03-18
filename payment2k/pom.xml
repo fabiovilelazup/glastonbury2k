@@ -7,9 +7,9 @@
         <groupId>br.com.zup</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <artifactId>payment</artifactId>
+    <artifactId>payment2k</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>payment</name>
+    <name>payment2k</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
