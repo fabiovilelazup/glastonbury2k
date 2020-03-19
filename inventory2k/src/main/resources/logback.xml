@@ -16,7 +16,7 @@
 		<appender-ref ref="json" />
 	</logger>
 
-	<root level="ERROR">
+	<root level="INFO">
 		<appender-ref ref="json" />
 	</root>
 </configuration>
