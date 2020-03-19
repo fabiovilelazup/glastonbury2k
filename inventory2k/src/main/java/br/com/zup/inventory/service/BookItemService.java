@@ -1,9 +1,9 @@
 package br.com.zup.inventory.service;
 
 import br.com.zup.inventory.controller.request.BookRequest;
-import br.com.zup.inventory.exception.ItemSoldOutException;
+import br.com.zup.inventory.exception.ServiceException;
 
 public interface BookItemService {
 
-	void book(BookRequest request) throws ItemSoldOutException;
+	void book(BookRequest request) throws ServiceException;
 }

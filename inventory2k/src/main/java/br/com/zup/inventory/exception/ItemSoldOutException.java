@@ -1,6 +1,6 @@
 package br.com.zup.inventory.exception;
 
-public class ItemSoldOutException extends Exception {
+public class ItemSoldOutException extends ServiceException {
 
 	private static final long serialVersionUID = 1L;
 

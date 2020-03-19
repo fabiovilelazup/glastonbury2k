@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.zup.inventory.controller.InventoryApi;
 import br.com.zup.inventory.controller.request.BookRequest;
 import br.com.zup.inventory.controller.response.ProductResponse;
-import br.com.zup.inventory.exception.ItemSoldOutException;
+import br.com.zup.inventory.exception.ServiceException;
 import br.com.zup.inventory.service.BookItemService;
 import br.com.zup.inventory.service.ProductService;
 
@@ -34,16 +34,18 @@ public class InventoryController implements InventoryApi {
 		this.bookItemService = bookItemService;
 	}
 
+	@Override
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "/products", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public List<ProductResponse> getProducts() {
+	public List<ProductResponse> getProducts() throws ServiceException {
 
 		return productService.findAll().stream().map(ProductResponse::fromEntity).collect(Collectors.toList());
 	}
 
+	@Override
 	@ResponseStatus(HttpStatus.OK)
 	@PostMapping(value = "/booking", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void book(@RequestBody BookRequest request) throws ItemSoldOutException {
+	public void book(@RequestBody BookRequest request) throws ServiceException {
 
 		bookItemService.book(request);
 	}

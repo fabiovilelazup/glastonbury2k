@@ -22,4 +22,9 @@ public class BookRequest {
 	public void setOrderEntries(Map<String, Integer> orderEntries) {
 		this.orderEntries = orderEntries;
 	}
+
+	@Override
+	public String toString() {
+		return "BookRequest [orderEntries=" + orderEntries + "]";
+	}
 }
