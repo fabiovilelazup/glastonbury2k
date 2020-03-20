@@ -11,6 +11,11 @@ services:
         command: java -jar inventory.jar
         networks:
         - order-network
+        logging:
+          driver: "fluentd"
+          options:
+            fluentd-address: localhost:24224
+            tag: testlogging.log 
 networks:
     order-network:
          external: true
