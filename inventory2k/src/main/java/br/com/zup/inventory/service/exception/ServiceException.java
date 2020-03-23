@@ -1,4 +1,4 @@
-package br.com.zup.inventory.exception;
+package br.com.zup.inventory.service.exception;
 
 public class ServiceException extends Exception {
 

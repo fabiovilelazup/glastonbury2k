@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.zup.inventory.controller.request.BookRequest;
 import br.com.zup.inventory.controller.response.ProductResponse;
-import br.com.zup.inventory.exception.ServiceException;
+import br.com.zup.inventory.service.exception.ServiceException;
 
 public interface InventoryApi {
 
 	@GetMapping("/products")
-	List<ProductResponse> getProducts() throws ServiceException;
+	List<ProductResponse> products() throws ServiceException;
 
 	@PostMapping("/booking")
-	void book(@RequestBody BookRequest request) throws ServiceException;
+	void booking(@RequestBody BookRequest request) throws ServiceException;
 }

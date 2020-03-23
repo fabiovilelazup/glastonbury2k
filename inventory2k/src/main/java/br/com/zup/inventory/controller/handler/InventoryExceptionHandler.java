@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import br.com.zup.inventory.exception.ItemSoldOutException;
+import br.com.zup.inventory.service.exception.ItemSoldOutException;
 
 @ControllerAdvice
 public class InventoryExceptionHandler extends ResponseEntityExceptionHandler {

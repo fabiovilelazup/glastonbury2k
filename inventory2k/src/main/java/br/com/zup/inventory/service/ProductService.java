@@ -3,7 +3,7 @@ package br.com.zup.inventory.service;
 import java.util.List;
 
 import br.com.zup.inventory.entity.Product;
-import br.com.zup.inventory.exception.ServiceException;
+import br.com.zup.inventory.service.exception.ServiceException;
 
 public interface ProductService {
 

@@ -12,10 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.zup.inventory.controller.request.BookRequest;
 import br.com.zup.inventory.entity.Product;
-import br.com.zup.inventory.exception.ItemSoldOutException;
-import br.com.zup.inventory.exception.ServiceException;
 import br.com.zup.inventory.service.BookItemService;
 import br.com.zup.inventory.service.ProductService;
+import br.com.zup.inventory.service.exception.ItemSoldOutException;
+import br.com.zup.inventory.service.exception.ServiceException;
 
 @Service
 @Transactional
