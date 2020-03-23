@@ -13,12 +13,12 @@ import br.com.zup.order.orchestrator.configuration.KafkaConfiguration;
 import br.com.zup.order.orchestrator.event.OrderCreatedEvent;
 
 @Component
-public class PaymentCallbackListener {
+public class BookingCallbackListener {
 
     private ObjectMapper objectMapper;
     private RuntimeService runtimeService;
 
-    public PaymentCallbackListener(ObjectMapper objectMapper, RuntimeService runtimeService) {
+    public BookingCallbackListener(ObjectMapper objectMapper, RuntimeService runtimeService) {
         this.objectMapper = objectMapper;
         this.runtimeService = runtimeService;
     }

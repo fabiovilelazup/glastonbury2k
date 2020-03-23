@@ -1,8 +1,5 @@
 package br.com.zup.order.orchestrator.task;
 
-import javax.ws.rs.BadRequestException;
-
-import org.camunda.bpm.engine.delegate.BpmnError;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Component;
@@ -10,16 +7,16 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.zup.order.orchestrator.event.OrderCreatedEvent;
-import br.com.zup.order.orchestrator.integration.inventory.InventoryApi;
-import br.com.zup.order.orchestrator.integration.inventory.request.BookRequest;
+import br.com.zup.order.orchestrator.integration.order.OrderApi;
+import br.com.zup.order.orchestrator.integration.order.request.SoldOutItemRequest;
 
 @Component
-public class BookingTask implements JavaDelegate {
+public class SoldOutItemTask implements JavaDelegate {
 
-	private InventoryApi api;
+	private OrderApi api;
 	private ObjectMapper objectMapper;
 
-	public BookingTask(InventoryApi api, ObjectMapper objectMapper) {
+	public SoldOutItemTask(OrderApi api, ObjectMapper objectMapper) {
 		this.api = api;
 		this.objectMapper = objectMapper;
 	}
@@ -27,18 +24,15 @@ public class BookingTask implements JavaDelegate {
 	@Override
 	public void execute(DelegateExecution delegateExecution) throws Exception {
 
+		// Get Order From Camunda.
 		String orderVariable = (String) delegateExecution.getVariable("ORDER");
 
+		// Parse JSON to Object
 		OrderCreatedEvent event = this.objectMapper.readValue(orderVariable, OrderCreatedEvent.class);
 
-		BookRequest request = new BookRequest();
-		request.setOrderEntries(event.getItems());
-
-		try {
-			this.api.booking(request);
-		} catch (BadRequestException e) {
-
-			throw new BpmnError(String.valueOf(e.getResponse().getStatus()));
-		}
+		// Call OrderAPI to Cancel Order.
+		SoldOutItemRequest request = new SoldOutItemRequest();
+		request.setOrderId(event.getOrderId());
+		this.api.soldouting(request);
 	}
 }

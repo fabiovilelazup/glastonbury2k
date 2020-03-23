@@ -8,5 +8,5 @@ public interface InventoryApi {
 
     @RequestLine("POST /booking")
     @Headers("Content-Type: application/json")
-    void book(BookRequest request);
+    void booking(BookRequest request);
 }

@@ -1,61 +1,79 @@
 package br.com.zup.order.service.impl;
 
-import br.com.zup.order.controller.request.CreateOrderRequest;
-import br.com.zup.order.controller.response.OrderResponse;
-import br.com.zup.order.event.OrderCreatedEvent;
-import br.com.zup.order.repository.OrderRepository;
-import br.com.zup.order.service.OrderService;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import br.com.zup.order.controller.request.CreateOrderRequest;
+import br.com.zup.order.controller.request.SoldOutItemRequest;
+import br.com.zup.order.controller.response.OrderResponse;
+import br.com.zup.order.entity.Order;
+import br.com.zup.order.entity.OrderItem;
+import br.com.zup.order.enums.Status;
+import br.com.zup.order.repository.OrderRepository;
+import br.com.zup.order.service.OrderService;
+import br.com.zup.order.service.exception.ServiceException;
+import br.com.zup.shared.event.OrderCreatedEvent;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    private OrderRepository orderRepository;
-    private KafkaTemplate<String, OrderCreatedEvent> template;
+	private OrderRepository orderRepository;
+	private KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;
 
-    @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, KafkaTemplate<String, OrderCreatedEvent> template) {
-        this.orderRepository = orderRepository;
-        this.template = template;
-    }
+	@Autowired
+	public OrderServiceImpl(OrderRepository orderRepository, KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate) {
+		this.orderRepository = orderRepository;
+		this.kafkaTemplate = kafkaTemplate;
+	}
 
-    @Override
-    public String save(CreateOrderRequest request) {
-        String orderId = this.orderRepository.save(request.toEntity()).getId();
+	@Override
+	public String save(CreateOrderRequest request) {
 
-        OrderCreatedEvent event = new OrderCreatedEvent(
-                orderId,
-                request.getCustomerId(),
-                request.getAmount(),
-                createItemMap(request)
-        );
+		// Convert to Entity
+		Order order = request.toEntity();
 
-        this.template.send("created-orders", event);
+		// Save Order
+		String orderId = this.orderRepository.save(order).getId();
 
-        return orderId;
-    }
+		// Create Event on Kafka
+		OrderCreatedEvent event = new OrderCreatedEvent(order.getId(), order.getCustomerId(), order.getAmount(),
+				order.getItems().stream().collect(Collectors.toMap(OrderItem::getProductId, OrderItem::getQuantity)));
 
-    private Map<String, Integer> createItemMap(CreateOrderRequest request) {
-        Map<String, Integer> result = new HashMap<>();
-        for (CreateOrderRequest.OrderItemPart item : request.getItems()) {
-            result.put(item.getId(), item.getQuantity());
-        }
+		this.kafkaTemplate.send("created-orders", event);
 
-        return result;
-    }
+		return orderId;
+	}
 
-    @Override
-    public List<OrderResponse> findAll() {
-        return this.orderRepository.findAll()
-                .stream()
-                .map(OrderResponse::fromEntity)
-                .collect(Collectors.toList());
-    }
+	@Override
+	public List<OrderResponse> findAll() {
+		return this.orderRepository.findAll().stream().map(OrderResponse::fromEntity).collect(Collectors.toList());
+	}
+
+	@Override
+	public Order findById(String id) {
+
+		Optional<Order> optional = orderRepository.findById(id);
+
+		return optional.orElse(null);
+	}
+
+	@Override
+	public void update(Order order) {
+
+		orderRepository.save(order);
+	}
+
+	@Override
+	public void soldouting(SoldOutItemRequest request) throws ServiceException {
+
+		Order order = findById(request.getOrderId());
+
+		order.setStatus(Status.SOLD_OUT);
+		update(order);
+	}
 }

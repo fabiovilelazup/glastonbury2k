@@ -8,7 +8,6 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>sharedk2</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>sharedk2</name>
     <description>shared classes</description>
 

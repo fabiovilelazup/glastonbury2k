@@ -1,106 +1,77 @@
 package br.com.zup.order.controller.request;
 
-import br.com.zup.order.entity.Order;
-import br.com.zup.order.entity.OrderItem;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import br.com.zup.order.entity.Order;
+import br.com.zup.order.entity.OrderItem;
+import br.com.zup.order.enums.Status;
+
 public class CreateOrderRequest {
 
-    private String customerId;
+	private String customerId;
 
-    private BigDecimal amount;
+	private List<OrderItemPart> items;
 
-    private List<OrderItemPart> items;
+	public String getCustomerId() {
+		return customerId;
+	}
 
-    public String getCustomerId() {
-        return customerId;
-    }
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
 
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
-    }
+	public List<OrderItemPart> getItems() {
+		return items;
+	}
 
-    public BigDecimal getAmount() {
-        return amount;
-    }
+	public void setItems(List<OrderItemPart> items) {
+		this.items = items;
+	}
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
+	public Order toEntity() {
 
-    public List<OrderItemPart> getItems() {
-        return items;
-    }
+		return new Order(UUID.randomUUID().toString(), this.customerId,
+				this.items.stream().map(OrderItemPart::getAmount).reduce(BigDecimal.ZERO, (p, q) -> p.add(q)),
+				this.items.stream().map(OrderItemPart::toEntity).collect(Collectors.toList()), Status.PENDING);
+	}
 
-    public void setItems(List<OrderItemPart> items) {
-        this.items = items;
-    }
+	public static class OrderItemPart {
 
-    public Order toEntity() {
-        return new Order(
-                UUID.randomUUID().toString(),
-                this.customerId,
-                this.amount,
-                this.items.stream()
-                        .map(OrderItemPart::toEntity)
-                        .collect(Collectors.toList()),
-                "pending"
-        );
-    }
+		private String productId;
 
-    public static class OrderItemPart {
+		private BigDecimal amount;
 
-        private String id;
+		private Integer quantity;
 
-        private String name;
+		public String getProductId() {
+			return productId;
+		}
 
-        private BigDecimal amount;
+		public void setProductId(String productId) {
+			this.productId = productId;
+		}
 
-        private Integer quantity;
+		public BigDecimal getAmount() {
+			return amount;
+		}
 
-        public String getId() {
-            return id;
-        }
+		public void setAmount(BigDecimal amount) {
+			this.amount = amount;
+		}
 
-        public void setId(String id) {
-            this.id = id;
-        }
+		public Integer getQuantity() {
+			return quantity;
+		}
 
-        public String getName() {
-            return name;
-        }
+		public void setQuantity(Integer quantity) {
+			this.quantity = quantity;
+		}
 
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public BigDecimal getAmount() {
-            return amount;
-        }
-
-        public void setAmount(BigDecimal amount) {
-            this.amount = amount;
-        }
-
-        public Integer getQuantity() {
-            return quantity;
-        }
-
-        public void setQuantity(Integer quantity) {
-            this.quantity = quantity;
-        }
-
-        public OrderItem toEntity() {
-            return new OrderItem(
-                    this.id,
-                    this.name,
-                    this.amount,
-                    this.quantity
-            );
-        }
-    }
+		public OrderItem toEntity() {
+			return new OrderItem(UUID.randomUUID().toString(), this.productId, this.quantity, this.amount);
+		}
+	}
 }
