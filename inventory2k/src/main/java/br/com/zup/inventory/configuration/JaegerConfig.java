@@ -6,6 +6,7 @@ import io.jaegertracing.Configuration;
 import io.jaegertracing.Configuration.ReporterConfiguration;
 import io.jaegertracing.Configuration.SamplerConfiguration;
 import io.jaegertracing.Configuration.SenderConfiguration;
+import io.jaegertracing.internal.samplers.ConstSampler;
 import io.opentracing.Tracer;
 
 @org.springframework.context.annotation.Configuration
@@ -16,7 +17,7 @@ public class JaegerConfig {
 
 	@Bean
 	public static Tracer getTracer() {
-		SamplerConfiguration samplerConfig = SamplerConfiguration.fromEnv().withType("const").withParam(1);
+		SamplerConfiguration samplerConfig = SamplerConfiguration.fromEnv().withType(ConstSampler.TYPE).withParam(1);
 
 		SenderConfiguration senderConfiguration = SenderConfiguration.fromEnv().withAgentHost("jaeger")
 				.withAgentPort(6831);
@@ -25,6 +26,9 @@ public class JaegerConfig {
 				.withSender(senderConfiguration);
 
 		Configuration config = new Configuration("inventory").withSampler(samplerConfig).withReporter(reporterConfig);
-		return config.getTracer();
+
+		Tracer tracer = config.getTracer();
+
+		return tracer;
 	}
 }
