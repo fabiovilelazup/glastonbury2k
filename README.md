@@ -8,10 +8,13 @@ Resumo das Implementações (Em construção)
     - Inicie um Prometheus com Docker e faça-o conectar na sua aplicação.
 
 1.1 Trace
+
   Utilizar odocker-compose para subir o Jaeger.
   
 1.2 Log
+
   Utilizar o docker-compose para subir a stack EFK.
   
 1.3 Métricas
+
    Dica: atenção a rede do Docker.
