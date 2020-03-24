@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.zup.inventory.controller.request.BookRequest;
+import br.com.zup.inventory.controller.request.RestoreRequest;
 import br.com.zup.inventory.controller.response.ProductResponse;
 import br.com.zup.inventory.service.exception.ServiceException;
 
@@ -17,4 +18,7 @@ public interface InventoryApi {
 
 	@PostMapping("/booking")
 	void booking(@RequestBody BookRequest request) throws ServiceException;
+
+	@PostMapping("/restore")
+	void restore(@RequestBody RestoreRequest request) throws ServiceException;
 }

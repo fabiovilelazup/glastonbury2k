@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.zup.inventory.controller.InventoryApi;
 import br.com.zup.inventory.controller.request.BookRequest;
+import br.com.zup.inventory.controller.request.RestoreRequest;
 import br.com.zup.inventory.controller.response.ProductResponse;
 import br.com.zup.inventory.service.BookItemService;
 import br.com.zup.inventory.service.ProductService;
@@ -48,5 +49,13 @@ public class InventoryController implements InventoryApi {
 	public void booking(@RequestBody BookRequest request) throws ServiceException {
 
 		bookItemService.book(request);
+	}
+
+	@Override
+	@ResponseStatus(HttpStatus.OK)
+	@PostMapping(value = "/restore", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void restore(@RequestBody RestoreRequest request) throws ServiceException {
+
+		productService.restore(request);
 	}
 }

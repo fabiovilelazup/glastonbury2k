@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import br.com.zup.order.controller.request.CancelOrderRequest;
 import br.com.zup.order.controller.request.CreateOrderRequest;
+import br.com.zup.order.controller.request.FinishOrderRequest;
 import br.com.zup.order.controller.request.SoldOutItemRequest;
 import br.com.zup.order.controller.response.OrderResponse;
 import br.com.zup.order.entity.Order;
@@ -75,6 +77,24 @@ public class OrderServiceImpl implements OrderService {
 		Order order = findById(request.getOrderId());
 
 		order.setStatus(Status.SOLD_OUT);
+		update(order);
+	}
+
+	@Override
+	public void cancel(CancelOrderRequest request) throws ServiceException {
+
+		Order order = findById(request.getOrderId());
+
+		order.setStatus(Status.REJECTED);
+		update(order);
+	}
+
+	@Override
+	public void finish(FinishOrderRequest request) throws ServiceException {
+
+		Order order = findById(request.getOrderId());
+
+		order.setStatus(Status.APROVED);
 		update(order);
 	}
 }

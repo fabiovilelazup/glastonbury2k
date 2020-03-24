@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.zup.order.controller.OrderApi;
+import br.com.zup.order.controller.request.CancelOrderRequest;
 import br.com.zup.order.controller.request.CreateOrderRequest;
+import br.com.zup.order.controller.request.FinishOrderRequest;
 import br.com.zup.order.controller.request.SoldOutItemRequest;
 import br.com.zup.order.controller.response.OrderResponse;
 import br.com.zup.order.service.OrderService;
@@ -50,5 +52,21 @@ public class OrderController implements OrderApi {
 	public void soldouting(@RequestBody SoldOutItemRequest request) throws ServiceException {
 
 		orderService.soldouting(request);
+	}
+
+	@Override
+	@ResponseStatus(HttpStatus.OK)
+	@PostMapping(value = "/cancel", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void cancel(@RequestBody CancelOrderRequest request) throws ServiceException {
+
+		orderService.cancel(request);
+	}
+
+	@Override
+	@ResponseStatus(HttpStatus.OK)
+	@PostMapping(value = "/finish", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void finish(@RequestBody FinishOrderRequest request) throws ServiceException {
+
+		orderService.finish(request);
 	}
 }

@@ -1,6 +1,7 @@
 package br.com.zup.inventory.service.impl;
 
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import org.apache.logging.log4j.message.StringFormattedMessage;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.zup.inventory.controller.request.RestoreRequest;
 import br.com.zup.inventory.entity.Product;
 import br.com.zup.inventory.repository.ProductRepository;
 import br.com.zup.inventory.service.ProductService;
@@ -91,6 +93,19 @@ public class ProductServiceImpl implements ProductService {
 			logger.error(errorMessage, e);
 
 			throw new ServiceException(errorMessage, e);
+		}
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void restore(RestoreRequest request) throws ServiceException {
+
+		for (Entry<String, Integer> item : request.getOrderEntries().entrySet()) {
+
+			Product product = findById(item.getKey());
+
+			product.setInventory(product.getInventory() + item.getValue());
+			update(product);
 		}
 	}
 }

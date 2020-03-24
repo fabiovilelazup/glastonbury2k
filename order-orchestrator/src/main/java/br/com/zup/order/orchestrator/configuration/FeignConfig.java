@@ -1,4 +1,4 @@
-package br.com.zup.order.orchestrator.integration;
+package br.com.zup.order.orchestrator.configuration;
 
 import javax.ws.rs.BadRequestException;
 
@@ -18,13 +18,13 @@ import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 
 @Configuration
-public class InventoryFeignConfig {
+public class FeignConfig {
 
 	private String inventoryUrl;
 	private String orderUrl;
 	private ObjectMapper objectMapper;
 
-	public InventoryFeignConfig(@Value(value = "${inventory.url}") String inventoryUrl,
+	public FeignConfig(@Value(value = "${inventory.url}") String inventoryUrl,
 			@Value(value = "${order.url}") String orderUrl, ObjectMapper objectMapper) {
 		this.inventoryUrl = inventoryUrl;
 		this.orderUrl = orderUrl;
