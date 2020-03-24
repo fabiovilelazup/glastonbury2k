@@ -17,20 +17,20 @@
 	</properties>
 
 	<dependencies>
-		
+
 		<dependency>
 			<groupId>br.com.zup</groupId>
 			<artifactId>sharedk2</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-	
+
 		<!-- WEB -->
 		<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        
-        <!-- Banco de Dados -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<!-- Banco de Dados -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -55,7 +55,6 @@
 		<dependency>
 			<groupId>io.opentracing.contrib</groupId>
 			<artifactId>opentracing-spring-jaeger-web-starter</artifactId>
-			<version>2.0.3</version>
 		</dependency>
 
 		<!-- Prometheus -->

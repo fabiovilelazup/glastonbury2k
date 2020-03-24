@@ -59,6 +59,12 @@
 			<artifactId>logback-jackson</artifactId>
 		</dependency>
 
+		<!-- Jaeger -->
+		<dependency>
+			<groupId>io.opentracing.contrib</groupId>
+			<artifactId>opentracing-spring-jaeger-web-starter</artifactId>
+		</dependency>
+
 		<!-- Kafka -->
 		<dependency>
 			<groupId>org.springframework.kafka</groupId>
