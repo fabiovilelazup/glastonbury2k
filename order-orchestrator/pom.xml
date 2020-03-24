@@ -35,7 +35,7 @@
 			<artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
 		</dependency>
 
-		<!-- Databases -->		
+		<!-- Banco de Dados -->		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
@@ -47,6 +47,16 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
+		</dependency>
+
+		<!-- Log -->
+		<dependency>
+			<groupId>ch.qos.logback.contrib</groupId>
+			<artifactId>logback-json-classic</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback.contrib</groupId>
+			<artifactId>logback-jackson</artifactId>
 		</dependency>
 
 		<!-- Kafka -->
