@@ -1,4 +1,4 @@
-package br.com.zup.order.configuration;
+package br.com.zup.payment.configuration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,8 +36,13 @@ public class KafkaConfiguration {
 	}
 
 	@Bean
-	public NewTopic message() {
-		return new NewTopic("created-orders", 1, (short) 1);
+	public NewTopic approvedOrdersTopic() {
+		return new NewTopic("approved-orders-payment", 1, (short) 1);
+	}
+
+	@Bean
+	public NewTopic rejectedOrdersTopic() {
+		return new NewTopic("rejected-orders-payment", 1, (short) 1);
 	}
 
 	@Bean

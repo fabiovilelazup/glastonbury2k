@@ -17,16 +17,17 @@ import br.com.zup.order.enums.Status;
 import br.com.zup.order.repository.OrderRepository;
 import br.com.zup.order.service.OrderService;
 import br.com.zup.order.service.exception.ServiceException;
+import br.com.zup.shared.event.AbstractOrderEvent;
 import br.com.zup.shared.event.OrderCreatedEvent;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
 	private OrderRepository orderRepository;
-	private KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;
+	private KafkaTemplate<String, AbstractOrderEvent> kafkaTemplate;
 
 	@Autowired
-	public OrderServiceImpl(OrderRepository orderRepository, KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate) {
+	public OrderServiceImpl(OrderRepository orderRepository, KafkaTemplate<String, AbstractOrderEvent> kafkaTemplate) {
 		this.orderRepository = orderRepository;
 		this.kafkaTemplate = kafkaTemplate;
 	}
