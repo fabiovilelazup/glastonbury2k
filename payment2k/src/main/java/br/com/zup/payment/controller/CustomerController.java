@@ -26,7 +26,7 @@ public class CustomerController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-	public List<CustomerResponse> getOrders() {
+	public List<CustomerResponse> customers() {
 		return this.customerService.findAll();
 	}
 }
