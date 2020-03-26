@@ -2,4 +2,4 @@ FROM alpine:3.10.1
 
 RUN apk --update add openjdk8-jre
 
-COPY target/inventory2k*.jar /inventory.jar
+COPY target/order2k*.jar /order.jar
