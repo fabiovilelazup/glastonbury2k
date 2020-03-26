@@ -28,9 +28,9 @@ services:
 
     fluentd:
       build: ./fluentd
+      container_name: fluentd
       volumes:
         - ./fluentd/conf:/fluentd/etc
-      container_name: fluentd
       ports:
         - "24224:24224"
         - "24224:24224/udp"
@@ -57,6 +57,8 @@ services:
         - "9090:9090"
       command:
         - "--config.file=/etc/prometheus/prometheus.yml"
+      links:
+        - "inventory"
       volumes:
         - ./prometheus/conf/prometheus.yml:/etc/prometheus/prometheus.yml
       networks:
@@ -72,9 +74,9 @@ services:
         
     postgres:
       image: postgres:9.6
+      container_name: postgres
       hostname: postgres
       domainname: postgres
-      container_name: postgres
       ports:
         - "5432:5432"
       environment:
@@ -95,95 +97,101 @@ services:
 
     kafka:
       image: wurstmeister/kafka:2.12-2.1.0
+      hostname: kafka
       container_name: kafka
       ports:
         - "9092:9092"
         - "29092:29092"
       environment:
-        KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+        KAFKA_ADVERTISED_HOST_NAME: kafka
         KAFKA_ADVERTISED_PORT: 9092
         KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      links:
+          - "zookeeper"
       depends_on:
         - zookeeper
       networks:
       - order-network
 
     inventory:
-        build: 
-          context: ./inventory2k
-        image: inventory:latest
-        container_name: inventory
-        ports:
-        - "8081:8081"
-        working_dir: /
-        command: java -jar inventory.jar
-        links:
-          - "fluentd"
-        networks:
-        - order-network
-        logging:
-          driver: "fluentd"
-          options:
-            fluentd-address: localhost:24224
-            tag: testlogging.log 
+      build: 
+        context: ./inventory2k
+      image: inventory:latest
+      container_name: inventory
+      ports:
+      - "8081:8081"
+      working_dir: /
+      command: java -jar inventory.jar
+      links:
+        - "fluentd"
+      networks:
+      - order-network
+      logging:
+        driver: "fluentd"
+        options:
+          fluentd-address: localhost:24224
+          tag: testlogging.log 
 
     payment:
-        build: 
-          context: ./payment2k
-        image: payment:latest
-        container_name: payment
-        ports:
-        - "8082:8082"
-        working_dir: /
-        command: java -jar payment.jar
-        links:
-          - "fluentd"
-        networks:
-        - order-network
-        logging:
-          driver: "fluentd"
-          options:
-            fluentd-address: localhost:24224
-            tag: testlogging.log 
+      build: 
+        context: ./payment2k
+      image: payment:latest
+      container_name: payment
+      ports:
+      - "8082:8082"
+      working_dir: /
+      command: java -jar payment.jar
+      links:
+        - "fluentd"
+        - "kafka"
+      networks:
+      - order-network
+      logging:
+        driver: "fluentd"
+        options:
+          fluentd-address: localhost:24224
+          tag: testlogging.log 
 
     order:
-        build: 
-          context: ./order2k
-        image: order:latest
-        container_name: order
-        ports:
-        - "8080:8080"
-        working_dir: /
-        command: java -jar order.jar
-        links:
-          - "fluentd"
-        networks:
-        - order-network
-        logging:
-          driver: "fluentd"
-          options:
-            fluentd-address: localhost:24224
-            tag: testlogging.log 
+      build: 
+        context: ./order2k
+      image: order:latest
+      container_name: order
+      ports:
+      - "8080:8080"
+      working_dir: /
+      command: java -jar order.jar
+      links:
+        - "fluentd"
+        - "kafka"
+      networks:
+      - order-network
+      logging:
+        driver: "fluentd"
+        options:
+          fluentd-address: localhost:24224
+          tag: testlogging.log 
 
     order-orchestrator:
-        build: 
-          context: ./order-orchestrator
-        image: order-orchestrator:latest
-        container_name: order-orchestrator
-        ports:
-        - "8083:8083"
-        working_dir: /
-        command: java -jar order-orchestrator.jar
-        links:
-          - "fluentd"
-        networks:
-        - order-network
-        logging:
-          driver: "fluentd"
-          options:
-            fluentd-address: localhost:24224
-            tag: testlogging.log 
+      build: 
+        context: ./order-orchestrator
+      image: order-orchestrator:latest
+      container_name: order-orchestrator
+      ports:
+      - "8083:8083"
+      working_dir: /
+      command: java -jar order-orchestrator.jar
+      links:
+        - "fluentd"
+        - "kafka"
+      networks:
+      - order-network
+      logging:
+        driver: "fluentd"
+        options:
+          fluentd-address: localhost:24224
+          tag: testlogging.log 
         
 networks:
-    order-network:
-         external: true
+  order-network:
+    driver: bridge
