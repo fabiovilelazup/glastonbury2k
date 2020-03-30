@@ -1,5 +1,5 @@
-FROM alpine:3.10.1
+FROM fabioborgesoliveiravilela/alpine-openjdk8:1.0.0
 
-RUN apk --update add openjdk8-jre
+COPY target/inventory2k*.jar app.jar
 
-COPY target/inventory2k*.jar /inventory.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]

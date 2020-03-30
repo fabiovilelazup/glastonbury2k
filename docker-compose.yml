@@ -120,8 +120,6 @@ services:
       container_name: inventory
       ports:
       - "8081:8081"
-      working_dir: /
-      command: java -jar inventory.jar
       links:
         - "fluentd"
       networks:
@@ -139,8 +137,6 @@ services:
       container_name: payment
       ports:
       - "8082:8082"
-      working_dir: /
-      command: java -jar payment.jar
       links:
         - "fluentd"
         - "kafka"
@@ -159,8 +155,6 @@ services:
       container_name: order
       ports:
       - "8080:8080"
-      working_dir: /
-      command: java -jar order.jar
       links:
         - "fluentd"
         - "kafka"
@@ -179,8 +173,6 @@ services:
       container_name: order-orchestrator
       ports:
       - "8083:8083"
-      working_dir: /
-      command: java -jar order-orchestrator.jar
       links:
         - "fluentd"
         - "kafka"
