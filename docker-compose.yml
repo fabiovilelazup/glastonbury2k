@@ -114,9 +114,7 @@ services:
       - order-network
 
     inventory:
-      build: 
-        context: ./inventory2k
-      image: inventory:latest
+      image: fabioborgesoliveiravilela/inventory2k
       container_name: inventory
       ports:
       - "8081:8081"
@@ -131,9 +129,7 @@ services:
           tag: testlogging.log 
 
     payment:
-      build: 
-        context: ./payment2k
-      image: payment:latest
+      image: fabioborgesoliveiravilela/payment2k
       container_name: payment
       ports:
       - "8082:8082"
@@ -149,9 +145,7 @@ services:
           tag: testlogging.log 
 
     order:
-      build: 
-        context: ./order2k
-      image: order:latest
+      image: fabioborgesoliveiravilela/order2k
       container_name: order
       ports:
       - "8080:8080"
@@ -167,9 +161,7 @@ services:
           tag: testlogging.log 
 
     order-orchestrator:
-      build: 
-        context: ./order-orchestrator
-      image: order-orchestrator:latest
+      image: fabioborgesoliveiravilela/order-orchestrator
       container_name: order-orchestrator
       ports:
       - "8083:8083"
