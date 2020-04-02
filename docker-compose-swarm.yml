@@ -1,0 +1,250 @@
+version: "3.7"
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.1
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    ports:
+    - "9200:9200"
+    - "9300:9300"
+    environment:
+    - ELASTICSEARCH_USERNAME=elastic
+    - ELASTICSEARCH_PASSWORD=changeme
+    - xpack.security.enabled=false
+    - path.data=/usr/share/elasticsearch/data
+    - discovery.type=single-node
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.6.1
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    ports:
+    - "5601:5601"
+    depends_on:
+    - elasticsearch
+
+  fluentd:
+    image: fabioborgesoliveiravilela/fluentd:0.0.1
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    volumes:
+      - ./fluentd/conf:/fluentd/etc
+    ports:
+    - "24224:24224"
+    - "24224:24224/udp"
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.17.1
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    ports:
+    - "5775:5775/udp"
+    - "6831:6831/udp"
+    - "6832:6832/udp"
+    - "16686:16686"
+
+  prometheus:
+    image: prom/prometheus:v2.16.0
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    command:
+    - "--config.file=/etc/prometheus/prometheus.yml"
+    volumes:
+    - ./prometheus/conf/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+    - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:6.7.1
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    ports:
+    - "3000:3000"
+        
+  postgres:
+    image: postgres:9.6
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    hostname: postgres
+    ports:
+    - "5432:5432"
+    environment:
+    - POSTGRES_DB=camunda
+    - POSTGRES_USER=camunda
+    - POSTGRES_PASSWORD=camunda
+
+  zookeeper:
+    image: zookeeper:3.4.13
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    ports:
+    - "2181:2181"
+    - "2888"
+
+  kafka:
+    image: wurstmeister/kafka:2.12-2.1.0
+    hostname: kafka
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    ports:
+    - "9092:9092"
+    - "29092:29092"
+    environment:
+    - KAFKA_ADVERTISED_HOST_NAME= kafka
+    - KAFKA_ADVERTISED_PORT= 9092
+    - KAFKA_ZOOKEEPER_CONNECT= zookeeper:2181
+    depends_on:
+    - zookeeper
+    depends_on:
+    - zookeeper
+
+  inventory:
+    image: fabioborgesoliveiravilela/inventory2k
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    ports:
+    - "8081:8081"
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: testlogging.log
+        
+  payment:
+    image: fabioborgesoliveiravilela/payment2k
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    ports:
+    - "8082:8082"
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: testlogging.log
+  order:
+    image: fabioborgesoliveiravilela/order2k
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    ports:
+    - "8080:8080"
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: testlogging.log 
+
+  order-orchestrator:
+    image: fabioborgesoliveiravilela/order-orchestrator
+    deploy:
+      mode: replicated
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.50'
+          memory: 256M
+    ports:
+    - "8083:8083"
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: testlogging.log
